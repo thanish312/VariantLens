@@ -8,7 +8,33 @@ import { GoogleGenAI } from '@google/genai'
 
 /* -------------------- App Setup -------------------- */
 const app = express()
-app.use(cors())
+const allowedOrigins = (
+  process.env.CORS_ORIGINS || 'http://localhost:5173'
+)
+  .split(',')
+  .map(o => o.trim())
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Allow non-browser requests (curl, Railway health checks)
+      if (!origin) return callback(null, true)
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true)
+      }
+
+      return callback(
+        new Error(`CORS blocked for origin: ${origin}`),
+        false
+      )
+    },
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type'],
+    credentials: false
+  })
+)
+
 app.use(express.json())
 
 /* -------------------- Multer -------------------- */
