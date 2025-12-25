@@ -17,40 +17,14 @@ const normalizeOrigin = (origin) => {
   }
 }
 
-const allowedOrigins = (process.env.CORS_ORIGINS || '')
-  .split(',')
-  .map(o => o.trim())
-  .filter(Boolean)
-  .map(normalizeOrigin)
-
 app.use(
   cors({
-    origin: function (origin, callback) {
-      // Allow server-to-server, curl, health checks
-      if (!origin) return callback(null, true)
-
-      const normalized = normalizeOrigin(origin)
-
-      if (allowedOrigins.includes(normalized)) {
-        return callback(null, true)
-      }
-
-      console.error('CORS BLOCKED:', {
-        origin,
-        normalized,
-        allowedOrigins
-      })
-
-      return callback(
-        new Error(`CORS blocked for origin: ${origin}`),
-        false
-      )
-    },
+    origin: '*',
     methods: ['GET', 'POST', 'OPTIONS'],
-    allowedHeaders: ['Content-Type'],
-    credentials: false
+    allowedHeaders: ['Content-Type']
   })
 )
+
 
 app.use(express.json())
 
