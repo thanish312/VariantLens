@@ -14,7 +14,7 @@ import BiotechIcon from '@mui/icons-material/Biotech';
 import axios from 'axios';
 
 // Set the backend base URL for all axios requests
-axios.defaults.baseURL = 'https://bioinformaticsgene-production.up.railway.app';
+axios.defaults.baseURL = import.meta.env.VITE_API_URL || '';
 
 import FileUpload from './components/FileUpload';
 import ResultCard from './components/ResultCard';
